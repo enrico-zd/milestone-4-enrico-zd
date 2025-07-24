@@ -1,0 +1,87 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          Int          @id @default(autoincrement())
+  email       String       @unique
+  password    String
+  full_name   String
+  role        Role
+  is_delete   Boolean      @default(false)
+  created_at  DateTime     @default(now())
+  updated_at  DateTime     @updatedAt
+
+  accounts    Account[]
+  transactions Transaction[] @relation("PerformedByUser")
+
+  @@map("user")
+}
+
+model Account {
+  id             Int          @id @default(autoincrement())
+  userId         Int
+  account_number String       @unique
+  account_type   AccountType
+  balance        Decimal      @default(0) @db.Decimal(15, 2)
+  is_active      Boolean      @default(true)
+  is_delete      Boolean      @default(false)
+  created_at     DateTime     @default(now())
+  updated_at     DateTime     @updatedAt
+
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sourceTransactions      Transaction[] @relation("SourceAccount")
+  destinationTransactions Transaction[] @relation("DestinationAccount")
+
+  @@map("account")
+}
+
+model Transaction {
+  id                    Int          @id @default(autoincrement())
+  type                  TransactionType
+  amount                Decimal      @db.Decimal(15, 2)
+  description           String?
+  source_account_id     Int?
+  destination_account_id Int?
+  performed_by_user_id  Int
+  is_delete             Boolean      @default(false)
+  created_at            DateTime     @default(now())
+  updated_at            DateTime     @updatedAt
+
+  source_account        Account?     @relation("SourceAccount", fields: [source_account_id], references: [id], onDelete: Cascade)
+  destination_account   Account?     @relation("DestinationAccount", fields: [destination_account_id], references: [id], onDelete: Cascade)
+  performed_by_user     User         @relation("PerformedByUser", fields: [performed_by_user_id], references: [id], onDelete: Cascade)
+
+  @@map("transaction")
+}
+
+
+enum Role {
+  CUSTOMER
+  ADMIN
+}
+
+enum AccountType {
+  SAVING
+  CHECKING
+  BUSINESS
+  INVESTMENT
+}
+
+enum TransactionType {
+  DEPOSIT
+  WITHDRAW
+  TRANSFER
+}
+
