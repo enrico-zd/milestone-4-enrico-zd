@@ -1,45 +1,51 @@
 import {
+  Body,
   Controller,
   Get,
-  Post,
-  Body,
-  Patch,
   Param,
-  Delete,
+  ParseIntPipe,
+  Post,
+  UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { TransactionsService } from './transactions.service';
-import { CreateTransactionDto } from './dto/create-transaction.dto';
-import { UpdateTransactionDto } from './dto/update-transaction.dto';
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
+import { User } from '@prisma/client';
+import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
+import { CreateTransactionDto } from './dto/req/create-transaction.dto';
+import { RolesGuard } from 'src/auth/guard/roles.guard';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { SerializationInterceptor } from 'src/common/interceptors/serialization.interceptors';
 
+@UseInterceptors(SerializationInterceptor)
 @Controller('transactions')
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class TransactionsController {
   constructor(private readonly transactionsService: TransactionsService) {}
 
-  @Post()
-  create(@Body() createTransactionDto: CreateTransactionDto) {
-    return this.transactionsService.create(createTransactionDto);
+  @Roles('ADMIN')
+  @Get(':id')
+  async findById(@Param('id', ParseIntPipe) id: number) {
+    return this.transactionsService.findById(id);
+  }
+
+  @Roles('ADMIN')
+  @Get('account/:id')
+  async findAllByAccountId(@Param('id', ParseIntPipe) id: number) {
+    return this.transactionsService.findAllByAccountId(id);
   }
 
   @Get()
-  findAll() {
-    return this.transactionsService.findAll();
+  async findAllByUserId(@CurrentUser() user: User) {
+    return this.transactionsService.findAllByUserId(user.id);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.transactionsService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateTransactionDto: UpdateTransactionDto,
+  @UseGuards(JwtAuthGuard)
+  @Post()
+  async createTransaction(
+    @CurrentUser() user: User,
+    @Body() data: CreateTransactionDto,
   ) {
-    return this.transactionsService.update(+id, updateTransactionDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.transactionsService.remove(+id);
+    return this.transactionsService.createTransaction(data, user.id);
   }
 }

@@ -1,31 +1,11 @@
-/*
-  Warnings:
+-- CreateEnum
+CREATE TYPE "Role" AS ENUM ('CUSTOMER', 'ADMIN');
 
-  - You are about to drop the `Account` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `Transaction` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `User` table. If the table is not empty, all the data it contains will be lost.
+-- CreateEnum
+CREATE TYPE "AccountType" AS ENUM ('SAVING', 'CHECKING', 'BUSINESS', 'INVESTMENT');
 
-*/
--- DropForeignKey
-ALTER TABLE "Account" DROP CONSTRAINT "Account_userId_fkey";
-
--- DropForeignKey
-ALTER TABLE "Transaction" DROP CONSTRAINT "Transaction_destination_account_id_fkey";
-
--- DropForeignKey
-ALTER TABLE "Transaction" DROP CONSTRAINT "Transaction_performed_by_user_id_fkey";
-
--- DropForeignKey
-ALTER TABLE "Transaction" DROP CONSTRAINT "Transaction_source_account_id_fkey";
-
--- DropTable
-DROP TABLE "Account";
-
--- DropTable
-DROP TABLE "Transaction";
-
--- DropTable
-DROP TABLE "User";
+-- CreateEnum
+CREATE TYPE "TransactionType" AS ENUM ('DEPOSIT', 'WITHDRAW', 'TRANSFER');
 
 -- CreateTable
 CREATE TABLE "user" (
@@ -35,6 +15,8 @@ CREATE TABLE "user" (
     "full_name" TEXT NOT NULL,
     "role" "Role" NOT NULL,
     "is_delete" BOOLEAN NOT NULL DEFAULT false,
+    "last_login" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "refresh_token" TEXT,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -46,8 +28,8 @@ CREATE TABLE "account" (
     "id" SERIAL NOT NULL,
     "userId" INTEGER NOT NULL,
     "account_number" TEXT NOT NULL,
-    "balance" DECIMAL(65,30) NOT NULL DEFAULT 0,
-    "type" "AccountType" NOT NULL,
+    "account_type" "AccountType" NOT NULL,
+    "balance" DECIMAL(15,2) NOT NULL DEFAULT 0,
     "is_active" BOOLEAN NOT NULL DEFAULT true,
     "is_delete" BOOLEAN NOT NULL DEFAULT false,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -60,12 +42,11 @@ CREATE TABLE "account" (
 CREATE TABLE "transaction" (
     "id" SERIAL NOT NULL,
     "type" "TransactionType" NOT NULL,
-    "amount" DECIMAL(65,30) NOT NULL,
+    "amount" DECIMAL(15,2) NOT NULL,
     "description" TEXT,
     "source_account_id" INTEGER,
     "destination_account_id" INTEGER,
     "performed_by_user_id" INTEGER NOT NULL,
-    "is_delete" BOOLEAN NOT NULL DEFAULT false,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 

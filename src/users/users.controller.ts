@@ -1,18 +1,26 @@
 import {
   Controller,
   Get,
-  Post,
   Body,
   Patch,
   Param,
   Delete,
   ParseIntPipe,
+  Post,
+  UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
-import { CreateUserDto } from './dto/req/create-user.dto';
 import { UpdateUserDto } from './dto/req/update-user.dto';
 import { UsersService } from './users.service';
+import { CreateUserDto } from './dto/req/create-user.dto';
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
+import { User } from '@prisma/client';
+import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
+import { SerializationInterceptor } from 'src/common/interceptors/serialization.interceptors';
 
+@UseInterceptors(SerializationInterceptor)
 @Controller('users')
+@UseGuards(JwtAuthGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
@@ -21,9 +29,10 @@ export class UsersController {
     return this.usersService.createUser(data);
   }
 
-  @Get(':id')
-  async findUserById(@Param('id', ParseIntPipe) id: number) {
-    return this.usersService.findUserById(id);
+  @UseGuards(JwtAuthGuard)
+  @Get('profile')
+  async getProfile(@CurrentUser() user: User) {
+    return this.usersService.findUserById(user.id);
   }
 
   @Patch(':id')

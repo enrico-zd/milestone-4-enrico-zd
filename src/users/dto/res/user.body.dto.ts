@@ -1,22 +1,22 @@
-import { Account, Role, Transaction } from '@prisma/client';
+import { Role } from '@prisma/client';
+import { Exclude, Expose } from 'class-transformer';
 
 export class UserResponseDTO {
+  @Expose()
   id: string;
+
+  @Expose()
   email: string;
+
+  @Exclude()
+  password: string;
+
+  @Expose()
   full_name: string;
+
+  @Expose()
   role: Role;
-}
 
-export class UserWithAccountsResponseDto extends UserResponseDTO {
-  accounts: Account[];
-}
-
-export class UserWithFinancialProfileResponseDto extends UserResponseDTO {
-  accounts: {
-    id: string;
-    account_number: string;
-    account_type: string;
-    balance: number;
-    transactions: Transaction[];
-  };
+  @Expose()
+  last_login: Date;
 }

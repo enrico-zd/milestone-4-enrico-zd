@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CreateAccountDto } from './dto/create-account.dto';
-import { UpdateAccountDto } from './dto/update-account.dto';
+import { CreateAccountDto } from './dto/req/create-account.dto';
+import { UpdateAccountDto } from './dto/req/update-account.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Account, Prisma } from '@prisma/client';
 
@@ -14,10 +14,13 @@ export class AccountsRepository {
     });
   }
 
-  async findAllAccount(filter?: { is_delete?: boolean }): Promise<Account[]> {
+  async findAllAccount(
+    userId: number,
+    filter?: { is_delete?: boolean },
+  ): Promise<Account[]> {
     return this.prisma.account.findMany({
       where: {
-        is_delete: filter?.is_delete ?? false,
+        AND: [{ is_delete: filter?.is_delete ?? false }, { userId: userId }],
       },
     });
   }
@@ -30,6 +33,16 @@ export class AccountsRepository {
       where: {
         id,
         is_delete: filter?.is_delete ?? false,
+      },
+    });
+  }
+
+  async findAccountByAccNumber(
+    account_number: string,
+  ): Promise<Account | null> {
+    return this.prisma.account.findUnique({
+      where: {
+        account_number: account_number,
       },
     });
   }

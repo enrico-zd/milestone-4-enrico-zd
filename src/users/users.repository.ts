@@ -1,14 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateUserDto } from './dto/req/create-user.dto';
 import { UpdateUserDto } from './dto/req/update-user.dto';
 import { User } from '@prisma/client';
+import { CreateUserDto } from './dto/req/create-user.dto';
 
 @Injectable()
 export class UserRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  // pindahkan ke auth dan gunakan hash
   async createUser(data: CreateUserDto): Promise<User> {
     return this.prisma.user.create({
       data,
@@ -22,6 +21,18 @@ export class UserRepository {
     return this.prisma.user.findUnique({
       where: {
         id,
+        is_delete: filter?.is_delete ?? false,
+      },
+    });
+  }
+
+  async findUserByEmail(
+    email: string,
+    filter?: { is_delete?: boolean },
+  ): Promise<User | null> {
+    return this.prisma.user.findUnique({
+      where: {
+        email,
         is_delete: filter?.is_delete ?? false,
       },
     });
