@@ -14,14 +14,16 @@ datasource db {
 }
 
 model User {
-  id          Int          @id @default(autoincrement())
-  email       String       @unique
-  password    String
-  full_name   String
-  role        Role
-  is_delete   Boolean      @default(false)
-  created_at  DateTime     @default(now())
-  updated_at  DateTime     @updatedAt
+  id            Int          @id @default(autoincrement())
+  email         String       @unique
+  password      String
+  full_name     String
+  role          Role
+  is_delete     Boolean      @default(false)
+  last_login    DateTime     @default(now())
+  refresh_token String?
+  created_at    DateTime     @default(now())
+  updated_at    DateTime     @updatedAt
 
   accounts    Account[]
   transactions Transaction[] @relation("PerformedByUser")
@@ -55,7 +57,6 @@ model Transaction {
   source_account_id     Int?
   destination_account_id Int?
   performed_by_user_id  Int
-  is_delete             Boolean      @default(false)
   created_at            DateTime     @default(now())
   updated_at            DateTime     @updatedAt
 

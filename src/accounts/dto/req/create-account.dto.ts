@@ -7,6 +7,10 @@ import {
   Matches,
 } from 'class-validator';
 
+export class findAccount {
+  @IsString()
+  account_number: string;
+}
 export class CreateAccountDto {
   @IsNotEmpty()
   @IsNumber()

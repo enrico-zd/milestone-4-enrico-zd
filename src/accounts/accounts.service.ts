@@ -3,8 +3,8 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateAccountDto } from './dto/create-account.dto';
-import { UpdateAccountDto } from './dto/update-account.dto';
+import { CreateAccountDto } from './dto/req/create-account.dto';
+import { UpdateAccountDto } from './dto/req/update-account.dto';
 import { AccountsRepository } from './accounts.repository';
 import { Account } from '@prisma/client';
 
@@ -15,8 +15,8 @@ export class AccountsService {
     return this.accountRepository.createAccount(data);
   }
 
-  async findAllAccount(): Promise<Account[]> {
-    return this.accountRepository.findAllAccount({ is_delete: false });
+  async findAllAccount(userId: number): Promise<Account[]> {
+    return this.accountRepository.findAllAccount(userId, { is_delete: false });
   }
 
   async findAccountById(id: number): Promise<Account> {
@@ -26,6 +26,19 @@ export class AccountsService {
 
     if (!account) {
       throw new NotFoundException(`Account with ID ${id} not found`);
+    }
+
+    return account;
+  }
+
+  async findAccountByAccNumber(accountNumber: string): Promise<Account> {
+    const account =
+      await this.accountRepository.findAccountByAccNumber(accountNumber);
+
+    if (!account) {
+      throw new NotFoundException(
+        `Account with Account Number ${accountNumber} not found`,
+      );
     }
 
     return account;
