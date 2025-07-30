@@ -41,28 +41,6 @@ export class TransactionsService {
   }
 
   async findAllByUserId(userId: number) {
-    // const accounts = await this.prisma.account.findMany({
-    //   where: { userId },
-    //   select: { id: true },
-    // });
-
-    // const accountIds = accounts.map((acc) => acc.id);
-
-    // return this.prisma.transaction.findMany({
-    //   where: {
-    //     OR: [
-    //       { source_account_id: { in: accountIds } },
-    //       { destination_account_id: { in: accountIds } },
-    //     ],
-    //   },
-    //   include: {
-    //     source_account: true,
-    //     destination_account: true,
-    //     performed_by_user: true,
-    //   },
-    //   orderBy: { created_at: 'desc' },
-    // });
-
     return this.prisma.transaction.findMany({
       where: {
         performed_by_user_id: userId,
@@ -90,8 +68,6 @@ export class TransactionsService {
     return this.prisma.$transaction(async () => {
       const sourceAccount: Account =
         await this.accountService.findAccountByAccNumber(accountNumber);
-
-      if (!sourceAccount) throw new Error('Account not found');
 
       if (sourceAccount.userId !== performed_by_user_id) {
         throw new Error('You do not have permission to access this account');

@@ -3,6 +3,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdateUserDto } from './dto/req/update-user.dto';
 import { User } from '@prisma/client';
 import { CreateUserDto } from './dto/req/create-user.dto';
+import { UserNotFoundRepositoryException } from 'src/common/exceptions/user-not-found.exception.repository';
 
 @Injectable()
 export class UserRepository {
@@ -17,29 +18,34 @@ export class UserRepository {
   async findUserById(
     id: number,
     filter?: { is_delete?: boolean },
-  ): Promise<User | null> {
-    return this.prisma.user.findUnique({
+  ): Promise<User> {
+    const user = await this.prisma.user.findUnique({
       where: {
         id,
         is_delete: filter?.is_delete ?? false,
       },
     });
+
+    if (!user) throw new UserNotFoundRepositoryException();
+
+    return user;
   }
 
   async findUserByEmail(
     email: string,
     filter?: { is_delete?: boolean },
-  ): Promise<User | null> {
-    return this.prisma.user.findUnique({
+  ): Promise<User> {
+    const user = await this.prisma.user.findUnique({
       where: {
         email,
         is_delete: filter?.is_delete ?? false,
       },
     });
-  }
 
-  // buat finduserwithaccount
-  // buat finduserwithfinacialprofile
+    if (!user) throw new UserNotFoundRepositoryException();
+
+    return user;
+  }
 
   async updateUser(id: number, data: UpdateUserDto): Promise<User> {
     await this.findUserById(id);

@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { UpdateUserDto } from './dto/req/update-user.dto';
 import { UserRepository } from './users.repository';
 import { User } from '@prisma/client';
@@ -17,18 +13,12 @@ export class UsersService {
   }
 
   async findUserById(id: number): Promise<User> {
-    const user = await this.userRepository.findUserById(id, {
+    return this.userRepository.findUserById(id, {
       is_delete: false,
     });
-
-    if (!user) {
-      throw new NotFoundException(`User with ID ${id} not found`);
-    }
-
-    return user;
   }
 
-  async findUserByEmail(email: string): Promise<User | null> {
+  async findUserByEmail(email: string): Promise<User> {
     const user = await this.userRepository.findUserByEmail(email, {
       is_delete: false,
     });
@@ -45,12 +35,6 @@ export class UsersService {
   }
 
   async restoreUser(id: number): Promise<User> {
-    const user = await this.userRepository.findUserById(id, {
-      is_delete: true,
-    });
-    if (!user) {
-      throw new BadRequestException('User not found');
-    }
     return this.userRepository.restoreUser(id);
   }
 
