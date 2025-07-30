@@ -3,6 +3,7 @@ import { CreateAccountDto } from './dto/req/create-account.dto';
 import { UpdateAccountDto } from './dto/req/update-account.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Account, Prisma } from '@prisma/client';
+import { AccountNotFoundRepositoryException } from 'src/common/exceptions/account-not-found.exception.repository';
 
 @Injectable()
 export class AccountsRepository {
@@ -28,23 +29,29 @@ export class AccountsRepository {
   async findAccountById(
     id: number,
     filter?: { is_delete: boolean },
-  ): Promise<Account | null> {
-    return this.prisma.account.findUnique({
+  ): Promise<Account> {
+    const account = await this.prisma.account.findUnique({
       where: {
         id,
         is_delete: filter?.is_delete ?? false,
       },
     });
+
+    if (!account) throw new AccountNotFoundRepositoryException();
+
+    return account;
   }
 
-  async findAccountByAccNumber(
-    account_number: string,
-  ): Promise<Account | null> {
-    return this.prisma.account.findUnique({
+  async findAccountByAccNumber(account_number: string): Promise<Account> {
+    const account = await this.prisma.account.findUnique({
       where: {
         account_number: account_number,
       },
     });
+
+    if (!account) throw new AccountNotFoundRepositoryException();
+
+    return account;
   }
 
   async updateAccount(id: number, data: UpdateAccountDto): Promise<Account> {

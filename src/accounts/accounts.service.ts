@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateAccountDto } from './dto/req/create-account.dto';
 import { UpdateAccountDto } from './dto/req/update-account.dto';
 import { AccountsRepository } from './accounts.repository';
@@ -20,28 +16,13 @@ export class AccountsService {
   }
 
   async findAccountById(id: number): Promise<Account> {
-    const account = await this.accountRepository.findAccountById(id, {
+    return await this.accountRepository.findAccountById(id, {
       is_delete: false,
     });
-
-    if (!account) {
-      throw new NotFoundException(`Account with ID ${id} not found`);
-    }
-
-    return account;
   }
 
   async findAccountByAccNumber(accountNumber: string): Promise<Account> {
-    const account =
-      await this.accountRepository.findAccountByAccNumber(accountNumber);
-
-    if (!account) {
-      throw new NotFoundException(
-        `Account with Account Number ${accountNumber} not found`,
-      );
-    }
-
-    return account;
+    return this.accountRepository.findAccountByAccNumber(accountNumber);
   }
 
   async updateAccount(id: number, data: UpdateAccountDto): Promise<Account> {
@@ -53,12 +34,6 @@ export class AccountsService {
   }
 
   async restoreAccount(id: number): Promise<Account> {
-    const account = await this.accountRepository.findAccountById(id, {
-      is_delete: true,
-    });
-    if (!account) {
-      throw new BadRequestException('Account not found');
-    }
     return this.accountRepository.restoreAccount(id);
   }
 
