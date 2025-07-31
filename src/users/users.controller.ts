@@ -6,7 +6,6 @@ import {
   Param,
   Delete,
   ParseIntPipe,
-  Post,
   UseGuards,
   UseInterceptors,
   InternalServerErrorException,
@@ -14,7 +13,6 @@ import {
 } from '@nestjs/common';
 import { UpdateUserDto } from './dto/req/update-user.dto';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/req/create-user.dto';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { User } from '@prisma/client';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
@@ -26,21 +24,6 @@ import { RepositoryException } from 'src/common/exceptions/exception.repository'
 @UseGuards(JwtAuthGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
-
-  @Post()
-  async createUser(@Body() data: CreateUserDto) {
-    try {
-      const user = await this.usersService.createUser(data);
-      return user;
-    } catch (error) {
-      if (error instanceof RepositoryException) throw error;
-      throw new InternalServerErrorException({
-        message: 'something wrong on our side',
-        error: 'internal server error',
-        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-      });
-    }
-  }
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
