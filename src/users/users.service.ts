@@ -18,12 +18,10 @@ export class UsersService {
     });
   }
 
-  async findUserByEmail(email: string): Promise<User> {
-    const user = await this.userRepository.findUserByEmail(email, {
+  async findUserByEmail(email: string): Promise<User | null> {
+    return this.userRepository.findUserByEmail(email, {
       is_delete: false,
     });
-
-    return user;
   }
 
   async updateUser(id: number, data: UpdateUserDto): Promise<User> {

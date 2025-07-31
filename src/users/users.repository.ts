@@ -34,17 +34,13 @@ export class UserRepository {
   async findUserByEmail(
     email: string,
     filter?: { is_delete?: boolean },
-  ): Promise<User> {
-    const user = await this.prisma.user.findUnique({
+  ): Promise<User | null> {
+    return this.prisma.user.findUnique({
       where: {
         email,
         is_delete: filter?.is_delete ?? false,
       },
     });
-
-    if (!user) throw new UserNotFoundRepositoryException();
-
-    return user;
   }
 
   async updateUser(id: number, data: UpdateUserDto): Promise<User> {
