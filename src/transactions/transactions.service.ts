@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Account, Transaction } from '@prisma/client';
-import { AccountsService } from 'src/accounts/accounts.service';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { AccountsService } from '../accounts/accounts.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { Decimal } from '@prisma/client/runtime/library';
 import { CreateTransactionDto } from './dto/req/create-transaction.dto';
 
@@ -92,7 +92,6 @@ export class TransactionsService {
       }
 
       let sourceNewBalance = sourceAccount.balance;
-      console.log('cek 1', sourceNewBalance);
       destinationNewBalance = destinationAccount?.balance ?? null;
 
       if (type === 'DEPOSIT') {

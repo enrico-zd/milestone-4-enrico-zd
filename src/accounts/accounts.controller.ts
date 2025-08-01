@@ -15,11 +15,11 @@ import {
 import { AccountsService } from './accounts.service';
 import { CreateAccountDto } from './dto/req/create-account.dto';
 import { UpdateAccountDto } from './dto/req/update-account.dto';
-import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
-import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
+import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { User } from '@prisma/client';
-import { SerializationInterceptor } from 'src/common/interceptors/serialization.interceptors';
-import { RepositoryException } from 'src/common/exceptions/exception.repository';
+import { SerializationInterceptor } from '../common/interceptors/serialization.interceptors';
+import { RepositoryException } from '../common/exceptions/exception.repository';
 
 @UseInterceptors(SerializationInterceptor)
 @Controller('accounts')

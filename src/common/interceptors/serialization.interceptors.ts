@@ -5,11 +5,11 @@ import {
   NestInterceptor,
 } from '@nestjs/common';
 import { map, Observable } from 'rxjs';
-import { AccountResponseDto } from 'src/accounts/dto/res/account.body.dto';
-import { AuthResponseBody } from 'src/auth/dto/res/auth.body.dto';
-import { transactionResponseDto } from 'src/transactions/dto/res/transactions.body.dto';
-import { UserResponseDTO } from 'src/users/dto/res/user.body.dto';
-import { mapEntityToDto } from 'src/utils/mapper.util';
+import { AccountResponseDto } from '../../accounts/dto/res/account.body.dto';
+import { AuthResponseBody } from '../../auth/dto/res/auth.body.dto';
+import { transactionResponseDto } from '../../transactions/dto/res/transactions.body.dto';
+import { UserResponseDTO } from '../../users/dto/res/user.body.dto';
+import { mapEntityToDto } from '../../utils/mapper.util';
 
 @Injectable()
 export class SerializationInterceptor implements NestInterceptor {

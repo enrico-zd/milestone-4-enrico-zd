@@ -1,5 +1,5 @@
 import { Expose, Type } from 'class-transformer';
-import { UserResponseDTO } from 'src/users/dto/res/user.body.dto';
+import { UserResponseDTO } from '../../../users/dto/res/user.body.dto';
 
 export class TokenBody {
   @Expose()
