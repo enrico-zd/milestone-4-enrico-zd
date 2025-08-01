@@ -6,9 +6,9 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Role, User } from '@prisma/client';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from '../users/users.service';
 import { LoginDto, RegisterDTO } from './dto/req/auth.dto';
-import { comparePassword } from 'src/utils/password-hash';
+import { comparePassword } from '../utils/password-hash';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()

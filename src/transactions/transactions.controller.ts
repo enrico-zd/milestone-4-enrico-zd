@@ -9,13 +9,13 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { TransactionsService } from './transactions.service';
-import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { User } from '@prisma/client';
-import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { CreateTransactionDto } from './dto/req/create-transaction.dto';
-import { RolesGuard } from 'src/auth/guard/roles.guard';
-import { Roles } from 'src/auth/decorators/roles.decorator';
-import { SerializationInterceptor } from 'src/common/interceptors/serialization.interceptors';
+import { RolesGuard } from '../auth/guard/roles.guard';
+import { Roles } from '../auth/decorators/roles.decorator';
+import { SerializationInterceptor } from '../common/interceptors/serialization.interceptors';
 
 @UseInterceptors(SerializationInterceptor)
 @Controller('transactions')

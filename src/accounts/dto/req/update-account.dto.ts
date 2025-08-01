@@ -11,5 +11,5 @@ export class UpdateAccountDto extends PartialType(CreateAccountDto) {
   account_type: AccountType;
 
   @IsOptional()
-  is_active: boolean;
+  is_active?: boolean;
 }

@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { CreateAccountDto } from './dto/req/create-account.dto';
 import { UpdateAccountDto } from './dto/req/update-account.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { Account, Prisma } from '@prisma/client';
-import { AccountNotFoundRepositoryException } from 'src/common/exceptions/account-not-found.exception.repository';
+import { AccountNotFoundRepositoryException } from '../common/exceptions/account-not-found.exception.repository';
 
 @Injectable()
 export class AccountsRepository {

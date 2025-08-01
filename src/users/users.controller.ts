@@ -13,11 +13,11 @@ import {
 } from '@nestjs/common';
 import { UpdateUserDto } from './dto/req/update-user.dto';
 import { UsersService } from './users.service';
-import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { User } from '@prisma/client';
-import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
-import { SerializationInterceptor } from 'src/common/interceptors/serialization.interceptors';
-import { RepositoryException } from 'src/common/exceptions/exception.repository';
+import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
+import { SerializationInterceptor } from '../common/interceptors/serialization.interceptors';
+import { RepositoryException } from '../common/exceptions/exception.repository';
 
 @UseInterceptors(SerializationInterceptor)
 @Controller('users')

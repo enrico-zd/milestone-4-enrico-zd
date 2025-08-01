@@ -1,7 +1,7 @@
 import { TransactionType } from '@prisma/client';
 import { Expose, Type } from 'class-transformer';
-import { AccountResponseDto } from 'src/accounts/dto/res/account.body.dto';
-import { UserResponseDTO } from 'src/users/dto/res/user.body.dto';
+import { AccountResponseDto } from '../../../accounts/dto/res/account.body.dto';
+import { UserResponseDTO } from '../../../users/dto/res/user.body.dto';
 
 export class transactionResponseDto {
   @Expose()
