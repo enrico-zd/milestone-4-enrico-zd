@@ -22,4 +22,7 @@ export class AccountResponseDto {
 
   @Expose()
   updated_at: Date;
+
+  @Expose()
+  message: string;
 }
