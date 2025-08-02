@@ -1,3 +1,4 @@
+
 import { Role } from '@prisma/client';
 import { Exclude, Expose } from 'class-transformer';
 
@@ -19,4 +20,7 @@ export class UserResponseDTO {
 
   @Expose()
   last_login: Date;
+
+  @Expose()
+  message: string;
 }
