@@ -12,6 +12,10 @@ export class UsersService {
     return this.userRepository.createUser(data);
   }
 
+  async restoreUser(id: number): Promise<User> {
+    return this.userRepository.restoreUser(id);
+  }
+
   async findUserById(id: number): Promise<User> {
     return this.userRepository.findUserById(id, {
       is_delete: false,
@@ -30,10 +34,6 @@ export class UsersService {
 
   async softDeleteUser(id: number): Promise<User> {
     return this.userRepository.softDeleteUser(id);
-  }
-
-  async restoreUser(id: number): Promise<User> {
-    return this.userRepository.restoreUser(id);
   }
 
   async hardDeleteUser(id: number): Promise<User> {

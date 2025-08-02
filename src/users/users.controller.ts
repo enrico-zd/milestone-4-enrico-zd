@@ -18,10 +18,12 @@ import { User } from '@prisma/client';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { SerializationInterceptor } from '../common/interceptors/serialization.interceptors';
 import { RepositoryException } from '../common/exceptions/exception.repository';
+import { RolesGuard } from 'src/auth/guard/roles.guard';
+import { Roles } from 'src/auth/decorators/roles.decorator';
 
 @UseInterceptors(SerializationInterceptor)
 @Controller('users')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
@@ -59,11 +61,14 @@ export class UsersController {
     }
   }
 
+  @Roles('ADMIN')
   @Patch(':id/soft-delete')
   async softDelete(@Param('id', ParseIntPipe) id: number) {
     try {
-      const user = await this.usersService.softDeleteUser(id);
-      return user;
+      await this.usersService.softDeleteUser(id);
+      return {
+        message: 'delete user successfully',
+      };
     } catch (error) {
       if (error instanceof RepositoryException) throw error;
       throw new InternalServerErrorException({
@@ -74,11 +79,14 @@ export class UsersController {
     }
   }
 
+  @Roles('ADMIN')
   @Patch(':id/restore')
   async restoreUser(@Param('id', ParseIntPipe) id: number) {
     try {
-      const user = await this.usersService.restoreUser(id);
-      return user;
+      await this.usersService.restoreUser(id);
+      return {
+        message: 'restore user successfully',
+      };
     } catch (error) {
       if (error instanceof RepositoryException) throw error;
       throw new InternalServerErrorException({
@@ -89,6 +97,7 @@ export class UsersController {
     }
   }
 
+  @Roles('ADMIN')
   @Delete(':id')
   async hardDeleteUser(@Param('id', ParseIntPipe) id: number) {
     try {
