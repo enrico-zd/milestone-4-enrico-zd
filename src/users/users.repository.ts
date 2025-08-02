@@ -72,7 +72,7 @@ export class UserRepository {
   }
 
   async hardDeleteUser(id: number): Promise<User> {
-    await this.findUserById(id);
+    await this.findUserById(id, { is_delete: true });
     return this.prisma.user.delete({
       where: { id },
     });

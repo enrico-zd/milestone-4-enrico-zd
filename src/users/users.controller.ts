@@ -101,8 +101,11 @@ export class UsersController {
   @Delete(':id')
   async hardDeleteUser(@Param('id', ParseIntPipe) id: number) {
     try {
-      const user = await this.usersService.hardDeleteUser(id);
-      return user;
+      await this.usersService.hardDeleteUser(id);
+      return {
+        id,
+        message: 'user delete permanent',
+      };
     } catch (error) {
       if (error instanceof RepositoryException) throw error;
       throw new InternalServerErrorException({
