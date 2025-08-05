@@ -23,7 +23,7 @@ export class AuthService {
     access_token: string;
     user: User;
   }> {
-    const { email, password, full_name, role } = registerDto;
+    const { email, password, full_name } = registerDto;
 
     const existingUser = await this.userService.findUserByEmail(email);
     if (existingUser) {
@@ -36,7 +36,6 @@ export class AuthService {
       email,
       password: hashedPassword,
       full_name: full_name ?? 'Anonymous',
-      role,
     });
 
     const token = this.jwtService.sign({

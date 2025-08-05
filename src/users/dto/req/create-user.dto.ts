@@ -1,11 +1,4 @@
-import { Role } from '@prisma/client';
-import {
-  IsEmail,
-  IsEnum,
-  IsNotEmpty,
-  IsString,
-  MinLength,
-} from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
 
 export class CreateUserDto {
   @IsNotEmpty()
@@ -20,10 +13,6 @@ export class CreateUserDto {
   @IsNotEmpty()
   @IsString()
   full_name: string;
-
-  @IsNotEmpty()
-  @IsEnum(Role, { message: 'Role must be either CUSTOMER or ADMIN' })
-  role: Role;
 }
 
 export class createUserWithAccountDTO extends CreateUserDto {
