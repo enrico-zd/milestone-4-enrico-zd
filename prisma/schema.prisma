@@ -19,7 +19,7 @@ model User {
   email         String       @unique
   password      String
   full_name     String
-  role          Role
+  role          Role         @default(CUSTOMER)
   is_delete     Boolean      @default(false)
   last_login    DateTime     @default(now())
   refresh_token String?
